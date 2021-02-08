@@ -1,0 +1,50 @@
+DHCP: dynamic Host Configuration Protocol
+
+Basically used to automatically assign IP addresses in a network. A router can also act as dhcp server.
+
+4 stages of dhcp operation: discovery,offer,request,acknowledgement(DORA)
+
+in discovery phase, client broadcasts request(for IP lease or last known IP address) on subnet using the subnet broadcasting address. If client remains connected on same server, server may grant request. Else, if it is an authoritative server, it will deny the request and new request needs to be made by client. If it is non-authoritative, request is simply ignored and expires, after which client has to give new request.
+
+in offer phase, server reserves an IP address and makes a lease offer to the client. Lease offer contains the ip address server is offering, client's MAC address, subnet mask, lease duration and the server's IP address. server determines the configuration based on the client's hardware address as specified in the CHADDR (client hardware address) field.
+
+
+
+
+
+packet header info: http://www.tcpipguide.com/free/t_DHCPMessageFormat.htm
+
+FOR SERVER, IP ADDRESS SHOULD BE MANUAL, NOT AUTOMATIC
+set netmask to 255.0.0.0, gateway to 10.125.130.101
+
+steps:
+1. stop firewalls
+2. for server: yum install dhcp
+3. go to etc/dhcp/dhcpd.conf
+4. in the configuration file, write the following commamds:
+	subnet 10.11.5.0 netmask 255.255.255.0{}
+	subnet 10.11.5.0 netmask 255.255.255.0{
+	option routers 10.125.130.101;
+	range 10.11.5.15 10.11.5.20;
+	default-lease-time 600;
+	max-lease-time 7200;
+	}
+5.systemctl start dhcpd.service
+6.systemctl enable dhcpd.service
+7.service dhcpd status
+8. If error comes:
+	fuser 67/udp
+in which we get 4 digit id
+	kill id
+
+
+for remote desktop
+1. ssh ip-address
+enter the password
+you can run the code on remote machine using your terminal
+
+
+Write up:
+1. DHCP definition,use, adv and disadv, packet header, server config steps, clinet config steps. 
+2. remote desktop config: ssh theory, how to run the code.
+Attach print out of code and output
